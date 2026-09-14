@@ -87,6 +87,66 @@ int main()
 void moveOddItemsToBack(LinkedList *ll)
 {
 	/* add your code here */
+	ListNode *cur = ll->head;
+
+	ListNode *evenHead = NULL;	// 첫 번째 짝수 노드
+	ListNode *evenTail = NULL;	// 마지막 짝수 노드
+	ListNode *oddHead = NULL;	// 첫 번째 홀수 노드
+	ListNode *oddTail = NULL;	// 마지막 홀 수 노드
+
+	if (ll->head == NULL) {
+		return;
+	}
+
+	if (ll->head->item%2 == 0) {
+		evenHead = ll->head;
+		evenTail = ll->head;
+	} else {
+		oddHead = ll->head;
+		oddTail = ll->head;
+	}
+
+	cur = cur->next;
+
+	while (cur != NULL) {
+
+		if (cur->item%2 == 0) {
+			if (evenHead == NULL) {
+				evenHead = cur;
+				evenTail = cur;
+			} else {
+				evenTail->next = cur;
+				evenTail = cur;
+			}
+		} else {
+			if (oddHead == NULL) {
+				oddHead = cur;
+				oddTail = cur;
+			} else {
+				oddTail->next = cur;
+				oddTail = cur;
+			}
+		}
+
+		cur = cur->next;
+	}
+
+	// 홀수 리스트의 마지막을 NULL로 변경
+	if (oddTail != NULL) {
+		oddTail->next = NULL;
+	}
+
+	// 짝수가 존재한다면?
+	if (evenHead != NULL) {
+		evenTail->next = oddHead;
+		ll->head = evenHead;
+	}
+
+	// 짝수가 없을떄
+	else {
+		ll->head = oddHead;
+	}
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
