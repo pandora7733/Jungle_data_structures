@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
-/* CE1007/CZ1007 Data Structures
-Lab Test: Section A - Linked List Questions
-Purpose: Implementing the required functions for Question 1 */
+/* CE1007/CZ1007 자료구조
+실습 테스트: A 섹션 - 연결 리스트 문제
+목적: 문제 1에서 요구하는 함수 구현 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -14,24 +14,24 @@ Purpose: Implementing the required functions for Question 1 */
 typedef struct _listnode{
 	int item;
 	struct _listnode *next;
-} ListNode;			// You should not change the definition of ListNode
+} ListNode;			// ListNode의 정의를 변경하면 안 됩니다.
 
 typedef struct _linkedlist{
-	int size;
-	ListNode *head;
-} LinkedList;			// You should not change the definition of LinkedList
+	int size; // 현재 노드의 개수
+	ListNode *head; // 첫번째 노드의 주소
+} LinkedList;			// LinkedList의 정의를 변경하면 안 됩니다.
 
 
 ///////////////////////// function prototypes ////////////////////////////////////
 
-//You should not change the prototype of this function
-int insertSortedLL(LinkedList *ll, int item);
+//이 함수의 함수 원형을 변경하면 안 됩니다.
+int insertSortedLL(LinkedList *ll, int item); //연결 리스트에 정수를 삽입합니다. <- 내가 짜야 하는 코드
 
-void printList(LinkedList *ll);
-void removeAllItems(LinkedList *ll);
-ListNode *findNode(LinkedList *ll, int index);
-int insertNode(LinkedList *ll, int index, int value);
-int removeNode(LinkedList *ll, int index);
+void printList(LinkedList *ll); //연결 리스트를 출력합니다.
+void removeAllItems(LinkedList *ll); //연결 리스트의 모든 노드를 제거합니다.
+ListNode *findNode(LinkedList *ll, int index); //연결 리스트에서 특정 인덱스의 노드를 찾습니다.
+int insertNode(LinkedList *ll, int index, int value); //연결 리스트에 특정 인덱스에 노드를 삽입합니다.
+int removeNode(LinkedList *ll, int index); //연결 리스트에서 특정 인덱스의 노드를 제거합니다.
 
 
 //////////////////////////// main() //////////////////////////////////////////////
@@ -42,14 +42,14 @@ int main()
 	int c, i, j;
 	c = 1;
 
-	//Initialize the linked list 1 as an empty linked list
+	//연결 리스트 1을 빈 연결 리스트로 초기화합니다.
 	ll.head = NULL;
 	ll.size = 0;
 
-	printf("1: Insert an integer to the sorted linked list:\n");
-	printf("2: Print the index of the most recent input value:\n");
-	printf("3: Print sorted linked list:\n");
-	printf("0: Quit:");
+	printf("1: Insert an integer to the sorted linked list:\n"); //연결 리스트에 정수를 삽입합니다.
+	printf("2: Print the index of the most recent input value:\n"); //가장 최근에 입력된 값의 인덱스를 출력합니다.
+	printf("3: Print sorted linked list:\n"); //정렬된 연결 리스트를 출력합니다.
+	printf("0: Quit:"); //종료합니다.
 
 	while (c != 0)
 	{
@@ -90,7 +90,29 @@ int main()
 
 int insertSortedLL(LinkedList *ll, int item)
 {
+
+	int index = 0;
+	ListNode *cur = ll->head; // ListNode의 주소를 저장
+
 	/* add your code here */
+	if (ll->head == NULL) { // 최초 head에 값 넣기
+		insertNode(ll, 0, item);
+		return index;
+
+	} else { 
+		while (cur != NULL) {
+			if (cur->item > item) { // 추가 값 위치를 찾아서 값을 넣기
+				insertNode(ll, index, item);
+				return index;
+			}
+			index += 1;
+			cur = cur->next;
+		}
+		// 맨 마지막에 값을 새로 추가하기
+		insertNode(ll, index, item);
+		return index;
+	}
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -168,8 +190,8 @@ int insertNode(LinkedList *ll, int index, int value){
 	}
 
 
-	// Find the nodes before and at the target position
-	// Create a new node and reconnect the links
+// 	목표 위치의 앞쪽 노드를 찾습니다.
+// 	새로운 노드를 생성하고 연결 관계를 다시 연결합니다.
 	if ((pre = findNode(ll, index - 1)) != NULL){
 		cur = pre->next;
 		pre->next = malloc(sizeof(ListNode));
@@ -187,11 +209,11 @@ int removeNode(LinkedList *ll, int index){
 
 	ListNode *pre, *cur;
 
-	// Highest index we can remove is size-1
+	// 삭제할 수 있는 가장 큰 인덱스는 size - 1입니다.
 	if (ll == NULL || index < 0 || index >= ll->size)
 		return -1;
 
-	// If removing first node, need to update head pointer
+	// 첫 번째 노드를 삭제하는 경우 head 포인터를 업데이트해야 합니다.
 	if (index == 0){
 		cur = ll->head->next;
 		free(ll->head);
@@ -201,8 +223,8 @@ int removeNode(LinkedList *ll, int index){
 		return 0;
 	}
 
-	// Find the nodes before and after the target position
-	// Free the target node and reconnect the links
+// 	목표 위치의 앞쪽과 뒤쪽 노드를 찾습니다.
+// 	목표 노드의 메모리를 해제하고 연결 관계를 다시 연결합니다.
 	if ((pre = findNode(ll, index - 1)) != NULL){
 
 		if (pre->next == NULL)
